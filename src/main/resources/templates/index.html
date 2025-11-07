@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEXSHOP</title>
+  <link rel="stylesheet" href="/lib/css/bootstrap.min.css" />
+  <script src="/lib/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="conteiner">
+    <div style="background-color: rgba(255, 56, 56, 0.822)">
+      <div style="text-align: center" class="p-2 fs-5 fw-bold">
+        ¡Pide hoy y te lo llevamos hoy! | HASTA 6 CUOTAS SIN INTERESES | Envío
+        gratis y discreto siempre.
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="img/logomarcoweb.png" alt="" width="180" height="85" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Ofertas</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categorías
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Vibradores</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Kegels</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Dildos</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Aceites</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Lencería</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Accesorios</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#productModal">Modelo</a>
+          </li>
+        </ul>
+
+          <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">
+            Buscar
+          </button>
+
+          <!-- Botones Registro / Login -->
+          <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#registrationModal">
+            Registro
+          </button>
+          <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+            Iniciar Sesión
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ Modal Registro conectado a Spring Boot -->
+  <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registrationModalLabel">
+            Registro de Usuario
+          </h5>
+          <button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- ⚙️ Formulario vinculado al backend -->
+          <form th:action="@{/registrar}" th:object="${usuario}" method="post">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese su nombre"
+                required />
+            </div>
+
+            <div class="mb-3">
+              <label for="correo" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="correo" th:field="*{correo}" placeholder="Ingrese su correo"
+                required />
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="password" th:field="*{password}"
+                placeholder="Ingrese su contraseña" required />
+            </div>
+
+            <!-- rol por defecto al registrarse -->
+            <input type="hidden" th:field="*{rol}" th:value="'USER'" />
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-danger">
+                Crear Cuenta
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Sesión (sin conexión aún) -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+          <button type="button" class="btn-close bg-primary" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+              <label for="loginEmail" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="loginEmail" name="correo" required />
+            </div>
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="loginPassword" name="password" required />
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Ingresar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mostrar error de login si existe -->
+  <div th:if="${loginError}" class="container mt-3">
+    <div class="alert alert-danger" th:text="${loginError}"></div>
+  </div>
+
+  <!-- Modal muñeca-->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="mb-3">
+            <img src="img/modelo.jpeg" class="img-fluid" alt="Muñeca de prueba" />
+          </div>
+          <div>
+            <h6 class="text-start">Muñeca erótica de silicona</h6>
+            <p class="text-start">
+              Este es un modelo de una muñeca erótica fabricada con silicona
+              de alta calidad, con detalles realistas y una estructura
+              articulada para una experiencia personal. Ideal para
+              coleccionistas o para quienes buscan un compañero íntimo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div style="object-fit: contain">
+          <img src="img/ban1.jpg" class="d-block w-100" alt="1500" />
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div style="object-fit: contain">
+          <img src="img/ban2.jpg" class="d-block w-100" alt="" />
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div style="object-fit: contain">
+          <img src="img/ban3.jpg" class="d-block w-100" alt="" />
+        </div>
+      </div>
+      <img src="..." class="d-block w-100" alt="..." />
+    </div>
+  </div>
+
+  <!-- Section -->
+  <section class="py-5 fondosection ">
+    <article class="py-3 bs-primary">
+      <div class="container text-center">
+        <div class="row align-items-center">
+          <div class="col">
+            <h2 class="text-start border-start border-5 border-danger p-2 fw-bold text-white">
+              Juguetes para el Placer
+            </h2>
+            <h6 class="text-start text-white">
+              Explora nuestra selección de juguetes sexuales pensados para tu
+              bienestar íntimo. Cada producto ha sido diseñado para brindar
+              nuevas sensaciones, aumentar la confianza y enriquecer tus
+              momentos de placer, ya sea en solitario o en pareja. Encuentra
+              el complemento ideal para descubrir y disfrutar de tu sexualidad
+              de forma segura y divertida.
+            </h6>
+          </div>
+          <div class="col">
+            <video controls class="w-50 rounded-4">
+              <source src="img/videosection.mp4" type="video/mp4" />
+              Tu navegador no soporta el video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+  <!-- FIN Section -->
+
+  <br />
+  <h1 class="text-center">Categorías</h1>
+
+  <!-- Carrucel de Cards -->
+  <div class="container my-5">
+    <div id="carouselCategorias" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row justify-content-center g-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card1.jpeg" class="card-img-top" alt="Vibradores" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Vibradores</h5>
+                  <p class="card-text">
+                    El vibrador es un juguete sexual con forma fálica para la
+                    masturbación y las relaciones.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card2.jpg" class="card-img-top" alt="Dildos" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Dildos</h5>
+                  <p class="card-text">
+                    Un dildo es un juguete sexual diseñado para la penetración
+                    sin vibración.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="row justify-content-center g-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card3.jpg" class="card-img-top" alt="Bombas" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Bombas</h5>
+                  <p class="card-text">
+                    Dispositivos de succión que mejoran el flujo sanguíneo con
+                    presión al vacío.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card4.jpg" class="card-img-top" alt="Aceites" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Aceites</h5>
+                  <p class="card-text">
+                    Aceites y lubricantes íntimos para una experiencia más
+                    placentera.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="row justify-content-center g-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card5_.jpg" class="card-img-top" alt="Lencería" height="180" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Lencería</h5>
+                  <p class="card-text">
+                    Diseños eróticos y sensuales para ocasiones especiales.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="card h-100 shadow-sm">
+                <img src="img/card6.jpg" class="card-img-top" alt="Accesorios" />
+                <div class="card-body text-center">
+                  <h5 class="card-title text-danger">Accesorios</h5>
+                  <p class="card-text">
+                    Juguetes y complementos para explorar y divertirse en
+                    pareja.
+                  </p>
+                  <a href="#" class="btn btn-outline-danger">Ver más</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselCategorias" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselCategorias" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+  </div>
+  <!-- Fin de Carrucel de Cards -->
+
+  <!-- Footer -->
+  <footer class="bg-danger text-white pt-5">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-12 col-md-5">
+          <h5 class="fw-bold">DEALCOBA.COM</h5>
+          <p>
+            Primer Sex Shop del Perú, brinda una alternativa agradable, segura
+            y discreta de adquirir Juguetes Sexuales de óptima calidad para
+            mejorar su calidad de vida sexual.
+          </p>
+          <p>
+            Te ofrecemos una amplia y variada línea de juguetes eróticos,
+            vibradores, dildos, aceites, lubricantes, energizantes, accesorios
+            y lencería erótica, para ti en tu intimidad y para jugar con tu
+            pareja.
+          </p>
+          <h6 class="fw-bold mt-3">Formas de Pago</h6>
+          <img src="img/pago.png" height="60" />
+          <img src="img/pago2.png" height="60" />
+        </div>
+
+        <div class="col-6 col-md-2">
+          <h6 class="fw-bold">Servicios al cliente</h6>
+          <ul class="list-unstyled">
+            <li>
+              <a href="#" class="text-white text-decoration-none">Nosotros</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Contáctanos</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Preguntas Frecuentes</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Políticas de Privacidad</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Términos y Condiciones</a>
+            </li>
+          </ul>
+          <h6 class="fw-bold mt-3">Horario</h6>
+          <p>Lun a Sab 11:00 am - 9:00 pm</p>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <h6 class="fw-bold">Nuestra Tienda</h6>
+          <ul class="list-unstyled">
+            <li>
+              <a href="#" class="text-white text-decoration-none">Inicio</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Ofertas</a>
+            </li>
+            <li>
+              <a href="#" class="text-white text-decoration-none">Categorías</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <h6 class="fw-bold">Contacto</h6>
+          <p>
+            <a href="mailto:jserrato713@gmail.com" class="text-white text-decoration-none">
+              <img src="img/gmail-seeklogo.png" width="20" class="me-2" />
+              jserrato713@gmail.com
+            </a>
+          </p>
+
+          <p>
+            <a href="tel:964229427" class="text-white text-decoration-none">
+              <img src="img/phone.png" width="15" class="me-2" />
+              + 51 964 229 427
+            </a>
+          </p>
+
+          <p>
+            <a href="https://wa.me/51964229427?text=Hola%20quiero%20más%20información" target="_blank"
+              class="text-white text-decoration-none">
+              <img src="img/whatsapp-seeklogo.png" width="20" class="me-2" />
+              964229427
+            </a>
+          </p>
+
+          <p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Calle+Esperanza+184,+Miraflores,+Lima"
+              target="_blank" class="text-white text-decoration-none">
+              <img src="img/gps.png" width="30" class="me-2" />
+              Calle Esperanza 184, Miraflores
+            </a>
+          </p>
+
+          <h6 class="fw-bold mt-3">Redes Sociales</h6>
+          <a href="https://facebook.com/" target="_blank" class="text-white me-3 fs-4">
+            <img src="img/facebook-seeklogo.png" width="40" class="me-2" /></a>
+
+          <a href="https://twitter.com/" target="_blank" class="text-white fs-4">
+            <img src="img/twitter.png" width="60" class="me-2" /></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-danger text-center py-3 mt-4">
+      <span>Copyright © 2025 Dealcoba Todos los derechos reservados</span>
+    </div>
+  </footer>
+</body>
+
+</html>
